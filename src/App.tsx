@@ -5,12 +5,19 @@ import useFetch from "./useFetch";
 export default App;
 
 function App() {
-  const coffeeShops = useCoffeeShops();
+  const coffeeShopsFetch = useCoffeeShops();
 
   return (
-    <div>
-      {coffeeShops &&
-        coffeeShops.map((coffeeShop) => (
+    <div style={{ marginLeft: "20px", marginTop: "20px" }}>
+      {coffeeShopsFetch.httpStatus &&
+        [406, 503].includes(coffeeShopsFetch.httpStatus) && (
+          <span
+            style={{ color: "red" }}
+          >{`HTTP error (${coffeeShopsFetch.httpStatus}). Please come back later.`}</span>
+        )}
+
+      {coffeeShopsFetch.data &&
+        coffeeShopsFetch.data.map((coffeeShop) => (
           <CoffeeShopInfo key={coffeeShop.id} coffeeShop={coffeeShop} />
         ))}
     </div>
@@ -19,7 +26,7 @@ function App() {
 
 function CoffeeShopInfo({ coffeeShop }: { coffeeShop: CoffeeShop }) {
   return (
-    <div style={{ marginLeft: "20px", marginTop: "20px" }}>
+    <div style={{ marginBottom: "20px" }}>
       <div>{coffeeShop.name}</div>
       <div>
         Coordinates: {coffeeShop.x}, {coffeeShop.y}
@@ -32,9 +39,5 @@ function useCoffeeShops() {
   const tokenFetch = useFetch<Token>(tokenUrl(), "POST");
   const token = tokenFetch.data?.token;
 
-  const coffeShopsFetch = useFetch<CoffeeShop[]>(
-    token ? coffeeShopsUrl(token) : null
-  );
-
-  return coffeShopsFetch.data;
+  return useFetch<CoffeeShop[]>(token ? coffeeShopsUrl(token) : null);
 }
