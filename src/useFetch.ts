@@ -1,30 +1,27 @@
 import { useEffect, useState } from "react";
 
-export type { FetchResult };
-export { useFetch };
-
-type FetchResult<Data> = {
+export type FetchResult<Data> = {
   data: Data | null;
   httpStatus: number | null;
   error: string | null;
   isLoading: boolean;
-  requestUrl: string | null;
 };
 
-function useFetch<Data>(requestUrl: string | null): FetchResult<Data> {
+export default function useFetch<Data>(
+  requestUrl: string | null,
+  method = "GET"
+): FetchResult<Data> {
   const [data, setData] = useState<Data | null>(null);
   const [httpStatus, setHttpStatus] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [requestUrlValue, setRequestUrlValue] = useState<string | null>(null);
 
   useEffect(() => {
+    setData(null);
     setHttpStatus(null);
     setError(null);
-    setRequestUrlValue(requestUrl);
 
     if (!requestUrl) {
-      setData(null);
       return;
     }
 
@@ -34,7 +31,7 @@ function useFetch<Data>(requestUrl: string | null): FetchResult<Data> {
     (async () => {
       let response: Response;
       try {
-        response = await fetch(requestUrl);
+        response = await fetch(requestUrl, { method });
         if (effectCancelled) return;
 
         setHttpStatus(response.status);
@@ -43,7 +40,6 @@ function useFetch<Data>(requestUrl: string | null): FetchResult<Data> {
 
         const message = (err as Error).message;
         setError(`Error: ${message}`);
-        setData(null);
         setIsLoading(false);
         return;
       }
@@ -53,7 +49,6 @@ function useFetch<Data>(requestUrl: string | null): FetchResult<Data> {
         if (effectCancelled) return;
 
         setError(`HTTP Error: (${response.status}) ${errorData.message}`);
-        setData(null);
         setIsLoading(false);
         return;
       }
@@ -68,7 +63,7 @@ function useFetch<Data>(requestUrl: string | null): FetchResult<Data> {
     return () => {
       effectCancelled = true;
     };
-  }, [requestUrl]);
+  }, [requestUrl, method]);
 
-  return { data, httpStatus, error, isLoading, requestUrl: requestUrlValue };
+  return { data, httpStatus, error, isLoading };
 }
