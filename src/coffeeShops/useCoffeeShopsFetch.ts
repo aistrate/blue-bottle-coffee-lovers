@@ -20,9 +20,10 @@ export default function useCoffeeShopsFetch() {
 }
 
 async function fetchCoffeeShopsWithRetry(
-  retries: number
+  retries: number,
+  prevToken?: string
 ): Promise<FetchResult<CoffeeShop[]>> {
-  const fetchResult = await fetchCoffeeShops();
+  const fetchResult = await fetchCoffeeShops(prevToken);
 
   retries = retries - 1;
 
@@ -32,22 +33,39 @@ async function fetchCoffeeShopsWithRetry(
 
   await delay(retryDelay);
 
-  return await fetchCoffeeShopsWithRetry(retries);
+  return await fetchCoffeeShopsWithRetry(retries, fetchResult.token);
 }
 
-async function fetchCoffeeShops(): Promise<FetchResult<CoffeeShop[]>> {
-  const tokenFetchResult = await fetchData<Token>(tokenUrl(), "POST");
+type CoffeeShopsFetchResult = { token?: string } & FetchResult<CoffeeShop[]>;
 
-  if (tokenFetchResult.error) {
-    return {
-      error: `Token fetch error: ${tokenFetchResult.error}`,
-      httpStatus: tokenFetchResult.httpStatus,
-    };
+async function fetchCoffeeShops(
+  prevToken?: string
+): Promise<CoffeeShopsFetchResult> {
+  let token: string;
+
+  if (!prevToken) {
+    const tokenFetchResult = await fetchData<Token>(tokenUrl(), "POST");
+
+    if (tokenFetchResult.error) {
+      return {
+        error: `Token fetch error: ${tokenFetchResult.error}`,
+        httpStatus: tokenFetchResult.httpStatus,
+      };
+    }
+
+    token = tokenFetchResult.data?.token as string;
+  } else {
+    token = prevToken;
   }
 
-  const token = tokenFetchResult.data?.token as string;
+  const coffeeShopsFetchResult = await fetchData<CoffeeShop[]>(
+    coffeeShopsUrl(token)
+  );
 
-  return await fetchData<CoffeeShop[]>(coffeeShopsUrl(token));
+  return {
+    token: coffeeShopsFetchResult.httpStatus === 401 ? undefined : token,
+    ...coffeeShopsFetchResult,
+  };
 }
 
 const delay = (ms: number) =>
