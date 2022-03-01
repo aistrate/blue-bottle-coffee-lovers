@@ -15,6 +15,10 @@ export default function CoffeeShopsView() {
           >{`HTTP error (${coffeeShopsFetch.httpStatus}). Please come back later.`}</div>
         )}
 
+      {!coffeeShopsFetch.httpStatus && coffeeShopsFetch.error && (
+        <div style={{ color: "red" }}>{coffeeShopsFetch.error}</div>
+      )}
+
       {coffeeShopsFetch.data &&
         coffeeShopsFetch.data.map((coffeeShop) => (
           <CoffeeShopView key={coffeeShop.id} coffeeShop={coffeeShop} />
