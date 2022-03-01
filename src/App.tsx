@@ -8,11 +8,13 @@ function App() {
 
   return (
     <div style={{ marginLeft: "20px", marginTop: "20px" }}>
+      {coffeeShopsFetch.isLoading && <div>Loading...</div>}
+
       {coffeeShopsFetch.httpStatus &&
         [406, 503].includes(coffeeShopsFetch.httpStatus) && (
-          <span
+          <div
             style={{ color: "red" }}
-          >{`HTTP error (${coffeeShopsFetch.httpStatus}). Please come back later.`}</span>
+          >{`HTTP error (${coffeeShopsFetch.httpStatus}). Please come back later.`}</div>
         )}
 
       {coffeeShopsFetch.data &&
