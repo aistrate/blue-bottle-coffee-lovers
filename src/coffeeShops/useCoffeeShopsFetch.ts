@@ -3,7 +3,8 @@ import { coffeeShopsUrl, tokenUrl } from "../api";
 import fetchData, { FetchResult } from "../fetchData";
 import { CoffeeShop, Token } from "./models";
 
-const retryDelay = 1000;
+const retryCount = 3;
+const retryInterval = 1000;
 
 export default function useCoffeeShopsFetch() {
   const [fetchResult, setFetchResult] = useState<FetchResult<CoffeeShop[]>>({});
@@ -11,7 +12,7 @@ export default function useCoffeeShopsFetch() {
 
   useEffect(() => {
     (async () => {
-      setFetchResult(await fetchCoffeeShopsWithRetry(3));
+      setFetchResult(await fetchCoffeeShopsWithRetry(retryCount));
       setIsLoading(false);
     })();
   }, []);
@@ -31,7 +32,7 @@ async function fetchCoffeeShopsWithRetry(
     return fetchResult;
   }
 
-  await delay(retryDelay);
+  await delay(retryInterval);
 
   return await fetchCoffeeShopsWithRetry(retries, fetchResult.token);
 }
