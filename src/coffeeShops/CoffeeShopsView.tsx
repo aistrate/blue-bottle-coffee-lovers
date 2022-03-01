@@ -8,19 +8,18 @@ export default function CoffeeShopsView() {
     <div style={{ marginLeft: "20px", marginTop: "20px" }}>
       {coffeeShopsFetch.isLoading && <div>Loading...</div>}
 
-      {coffeeShopsFetch.httpStatus &&
-        [406, 503].includes(coffeeShopsFetch.httpStatus) && (
-          <div
-            style={{ color: "red" }}
-          >{`HTTP error (${coffeeShopsFetch.httpStatus}). Please come back later.`}</div>
-        )}
+      {coffeeShopsFetch.httpStatus && coffeeShopsFetch.httpStatus !== 200 && (
+        <div
+          style={{ color: "red" }}
+        >{`HTTP error (${coffeeShopsFetch.httpStatus}). Please come back later.`}</div>
+      )}
 
       {!coffeeShopsFetch.httpStatus && coffeeShopsFetch.error && (
         <div style={{ color: "red" }}>{coffeeShopsFetch.error}</div>
       )}
 
-      {coffeeShopsFetch.coffeeShops &&
-        coffeeShopsFetch.coffeeShops.map((coffeeShop) => (
+      {coffeeShopsFetch.data &&
+        coffeeShopsFetch.data.map((coffeeShop) => (
           <CoffeeShopView key={coffeeShop.id} coffeeShop={coffeeShop} />
         ))}
     </div>

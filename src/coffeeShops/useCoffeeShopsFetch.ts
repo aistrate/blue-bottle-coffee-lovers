@@ -1,36 +1,47 @@
 import { useEffect, useState } from "react";
 import { coffeeShopsUrl, tokenUrl } from "../api";
-import fetchData from "../fetchData";
+import fetchData, { FetchResult } from "../fetchData";
 import { CoffeeShop, Token } from "./models";
 
 export default function useCoffeeShopsFetch() {
-  const [coffeeShops, setCoffeeShops] = useState<CoffeeShop[] | undefined>();
-  const [httpStatus, setHttpStatus] = useState<number | undefined>();
-  const [error, setError] = useState<string | undefined>();
+  const [fetchResult, setFetchResult] = useState<FetchResult<CoffeeShop[]>>({});
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
-      const tokenFetch = await fetchData<Token>(tokenUrl(), "POST");
-
-      if (tokenFetch.error) {
-        setError(`Token fetch error: ${tokenFetch.error}`);
-        setIsLoading(false);
-        return;
-      }
-
-      const token = tokenFetch.data?.token as string;
-
-      const coffeeShopsFetch = await fetchData<CoffeeShop[]>(
-        coffeeShopsUrl(token)
-      );
-
-      setCoffeeShops(coffeeShopsFetch.data);
-      setHttpStatus(coffeeShopsFetch.httpStatus);
-      setError(coffeeShopsFetch.error);
+      setFetchResult(await fetchCoffeeShopsWithRetry(3));
       setIsLoading(false);
     })();
   }, []);
 
-  return { coffeeShops, httpStatus, error, isLoading };
+  return { ...fetchResult, isLoading };
+}
+
+async function fetchCoffeeShopsWithRetry(
+  retries: number
+): Promise<FetchResult<CoffeeShop[]>> {
+  const fetchResult = await fetchCoffeeShops();
+
+  retries = retries - 1;
+
+  if (fetchResult.httpStatus === 200 || retries <= 0) {
+    return fetchResult;
+  }
+
+  return await fetchCoffeeShopsWithRetry(retries);
+}
+
+async function fetchCoffeeShops(): Promise<FetchResult<CoffeeShop[]>> {
+  const tokenFetchResult = await fetchData<Token>(tokenUrl(), "POST");
+
+  if (tokenFetchResult.error) {
+    return {
+      error: `Token fetch error: ${tokenFetchResult.error}`,
+      httpStatus: tokenFetchResult.httpStatus,
+    };
+  }
+
+  const token = tokenFetchResult.data?.token as string;
+
+  return await fetchData<CoffeeShop[]>(coffeeShopsUrl(token));
 }

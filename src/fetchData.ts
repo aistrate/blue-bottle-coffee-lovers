@@ -1,4 +1,4 @@
-type FetchResult<Data> = {
+export type FetchResult<Data> = {
   data?: Data;
   httpStatus?: number;
   error?: string;
