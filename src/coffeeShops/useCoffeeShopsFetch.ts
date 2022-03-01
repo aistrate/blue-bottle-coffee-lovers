@@ -6,8 +6,10 @@ import { CoffeeShop, Token } from "./models";
 const retryCount = 3;
 const retryInterval = 1000;
 
+type CoffeeShopsFetchResult = { token?: string } & FetchResult<CoffeeShop[]>;
+
 export default function useCoffeeShopsFetch() {
-  const [fetchResult, setFetchResult] = useState<FetchResult<CoffeeShop[]>>({});
+  const [fetchResult, setFetchResult] = useState<CoffeeShopsFetchResult>({});
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -23,7 +25,7 @@ export default function useCoffeeShopsFetch() {
 async function fetchCoffeeShopsWithRetry(
   retries: number,
   prevToken?: string
-): Promise<FetchResult<CoffeeShop[]>> {
+): Promise<CoffeeShopsFetchResult> {
   const fetchResult = await fetchCoffeeShops(prevToken);
 
   retries = retries - 1;
@@ -40,8 +42,6 @@ async function fetchCoffeeShopsWithRetry(
 
   return await fetchCoffeeShopsWithRetry(retries, fetchResult.token);
 }
-
-type CoffeeShopsFetchResult = { token?: string } & FetchResult<CoffeeShop[]>;
 
 async function fetchCoffeeShops(
   prevToken?: string
