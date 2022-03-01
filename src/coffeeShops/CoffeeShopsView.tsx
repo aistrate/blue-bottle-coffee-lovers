@@ -19,8 +19,8 @@ export default function CoffeeShopsView() {
         <div style={{ color: "red" }}>{coffeeShopsFetch.error}</div>
       )}
 
-      {coffeeShopsFetch.data &&
-        coffeeShopsFetch.data.map((coffeeShop) => (
+      {coffeeShopsFetch.coffeeShops &&
+        coffeeShopsFetch.coffeeShops.map((coffeeShop) => (
           <CoffeeShopView key={coffeeShop.id} coffeeShop={coffeeShop} />
         ))}
     </div>
