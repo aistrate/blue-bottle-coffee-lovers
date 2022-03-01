@@ -1,11 +1,10 @@
-import { coffeeShopsUrl, tokenUrl } from "./api";
-import { CoffeeShop, Token } from "./models";
-import useFetch from "./useFetch";
+import { CoffeeShop } from "./models";
+import useCoffeeShopsFetch from "./useCoffeeShopsFetch";
 
 export default App;
 
 function App() {
-  const coffeeShopsFetch = useCoffeeShops();
+  const coffeeShopsFetch = useCoffeeShopsFetch();
 
   return (
     <div style={{ marginLeft: "20px", marginTop: "20px" }}>
@@ -33,11 +32,4 @@ function CoffeeShopInfo({ coffeeShop }: { coffeeShop: CoffeeShop }) {
       </div>
     </div>
   );
-}
-
-function useCoffeeShops() {
-  const tokenFetch = useFetch<Token>(tokenUrl(), "POST");
-  const token = tokenFetch.data?.token;
-
-  return useFetch<CoffeeShop[]>(token ? coffeeShopsUrl(token) : null);
 }
