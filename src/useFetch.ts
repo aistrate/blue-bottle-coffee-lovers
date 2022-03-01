@@ -45,10 +45,7 @@ export default function useFetch<Data>(
       }
 
       if (!response.ok) {
-        const errorData = await response.json();
-        if (effectCancelled) return;
-
-        setError(`HTTP Error: (${response.status}) ${errorData.message}`);
+        setError(`HTTP Error (${response.status})`);
         setIsLoading(false);
         return;
       }
