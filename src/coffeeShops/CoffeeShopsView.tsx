@@ -8,14 +8,12 @@ export default function CoffeeShopsView() {
     <div style={{ marginLeft: "20px", marginTop: "20px" }}>
       {coffeeShopsFetch.isLoading && <div>Loading...</div>}
 
-      {coffeeShopsFetch.httpStatus && coffeeShopsFetch.httpStatus !== 200 && (
-        <div
-          style={{ color: "red" }}
-        >{`HTTP error (${coffeeShopsFetch.httpStatus}). Please come back later.`}</div>
-      )}
-
-      {!coffeeShopsFetch.httpStatus && coffeeShopsFetch.error && (
-        <div style={{ color: "red" }}>{coffeeShopsFetch.error}</div>
+      {coffeeShopsFetch.error && (
+        <div style={{ color: "red" }}>
+          {coffeeShopsFetch.httpStatus
+            ? `${coffeeShopsFetch.error}. Please come back later.`
+            : coffeeShopsFetch.error}
+        </div>
       )}
 
       {coffeeShopsFetch.data &&

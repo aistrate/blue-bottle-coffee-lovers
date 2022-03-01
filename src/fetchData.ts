@@ -19,7 +19,7 @@ export default async function fetchData<Data>(
 
   if (!response.ok) {
     return {
-      error: `HTTP Error (${response.status})`,
+      error: `HTTP error (${response.status})`,
       httpStatus: response.status,
     };
   }
