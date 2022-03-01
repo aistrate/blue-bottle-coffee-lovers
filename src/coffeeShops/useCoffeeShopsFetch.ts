@@ -28,7 +28,11 @@ async function fetchCoffeeShopsWithRetry(
 
   retries = retries - 1;
 
-  if (fetchResult.httpStatus === 200 || retries <= 0) {
+  if (
+    fetchResult.httpStatus === 200 ||
+    !fetchResult.httpStatus ||
+    retries <= 0
+  ) {
     return fetchResult;
   }
 
