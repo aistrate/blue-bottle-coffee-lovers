@@ -1,6 +1,6 @@
-import { coffeeShopsUrl, tokenUrl } from "./api";
+import { coffeeShopsUrl, tokenUrl } from "../api";
+import useFetch from "../useFetch";
 import { CoffeeShop, Token } from "./models";
-import useFetch from "./useFetch";
 
 export default function useCoffeeShopsFetch() {
   const tokenFetch = useFetch<Token>(tokenUrl(), "POST");
