@@ -38,7 +38,9 @@ async function fetchCoffeeShopsWithRetry(
     return fetchResult;
   }
 
-  await delay(retryInterval);
+  if (fetchResult.httpStatus !== 401) {
+    await delay(retryInterval);
+  }
 
   return await fetchCoffeeShopsWithRetry(retries, fetchResult.token);
 }
