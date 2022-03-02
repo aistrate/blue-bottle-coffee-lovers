@@ -1,4 +1,4 @@
-import CoffeeShopView from "./CoffeeShopView";
+import CoffeeShopsChart from "./CoffeeShopsChart";
 import { convertFromRaw } from "./models";
 import useCoffeeShopsFetch from "./useCoffeeShopsFetch";
 
@@ -18,10 +18,7 @@ export default function CoffeeShopsView() {
         </div>
       )}
 
-      {coffeeShops &&
-        coffeeShops.map((coffeeShop) => (
-          <CoffeeShopView key={coffeeShop.id} coffeeShop={coffeeShop} />
-        ))}
+      {coffeeShops && <CoffeeShopsChart coffeeShops={coffeeShops} />}
     </div>
   );
 }
