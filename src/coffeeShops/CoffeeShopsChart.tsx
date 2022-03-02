@@ -28,22 +28,6 @@ export default function CoffeeShopsChart({
 function createOptions() {
   return {
     aspectRatio: 2.2,
-    elements: {
-      point: {
-        radius: 6,
-      },
-    },
-    plugins: {
-      tooltip: {
-        callbacks: {
-          title: function (tooltipItems: TooltipItem<"scatter">[]) {
-            return tooltipItems
-              .map((item) => (item.raw as CoffeeShop).name)
-              .join("\n");
-          },
-        },
-      },
-    },
     scales: {
       x: {
         min: -180,
@@ -55,7 +39,23 @@ function createOptions() {
         max: 90,
       },
     },
+    elements: {
+      point: {
+        radius: 6,
+      },
+    },
+    plugins: {
+      tooltip: {
+        callbacks: {
+          title: tooltipTitle,
+        },
+      },
+    },
   };
+}
+
+function tooltipTitle(tooltipItems: TooltipItem<"scatter">[]) {
+  return tooltipItems.map((item) => (item.raw as CoffeeShop).name).join("\n");
 }
 
 function createData(coffeeShops: CoffeeShop[]) {
