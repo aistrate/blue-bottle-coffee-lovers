@@ -27,7 +27,6 @@ export default function CoffeeShopsChart({
 
 function createOptions() {
   return {
-    aspectRatio: 2.2,
     scales: {
       x: {
         min: -180,

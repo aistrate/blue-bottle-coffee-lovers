@@ -7,7 +7,7 @@ export default function CoffeeShopsView() {
   const coffeeShops = coffeeShopsFetch.data?.map(convertFromRaw);
 
   return (
-    <div style={{ marginLeft: "20px", marginTop: "20px" }}>
+    <div style={{ margin: "20px 6vw 0 6vw" }}>
       {coffeeShopsFetch.isLoading && <div>Loading...</div>}
 
       {coffeeShopsFetch.error && (
