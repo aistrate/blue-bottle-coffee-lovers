@@ -8,7 +8,7 @@ export default function CoffeeShopsView() {
 
   return (
     <div className="CoffeeShopsView__container">
-      {coffeeShopsFetch.isLoading && <div>Loading...</div>}
+      {coffeeShopsFetch.isLoading && <div className="spinner"></div>}
 
       {coffeeShopsFetch.error && (
         <div className="error">

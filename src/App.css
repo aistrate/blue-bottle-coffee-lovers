@@ -1,7 +1,30 @@
 .CoffeeShopsView__container {
   margin: 20px 6vw 0 6vw;
+  position: relative;
 }
 
 .error {
   color: red;
+}
+
+.spinner:before {
+  content: "";
+  box-sizing: border-box;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 50px;
+  height: 50px;
+  margin-top: 0;
+  margin-left: -25px;
+  border-radius: 50%;
+  border: 6px solid #ccc;
+  border-top-color: #024ca0;
+  animation: spinnerRotate 0.6s linear infinite;
+}
+
+@keyframes spinnerRotate {
+  to {
+    transform: rotate(360deg);
+  }
 }
