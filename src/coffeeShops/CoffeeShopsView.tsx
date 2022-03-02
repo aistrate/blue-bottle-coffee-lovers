@@ -1,4 +1,4 @@
-import { CoffeeShop } from "./models";
+import CoffeeShopView from "./CoffeeShopView";
 import useCoffeeShopsFetch from "./useCoffeeShopsFetch";
 
 export default function CoffeeShopsView() {
@@ -20,17 +20,6 @@ export default function CoffeeShopsView() {
         coffeeShopsFetch.data.map((coffeeShop) => (
           <CoffeeShopView key={coffeeShop.id} coffeeShop={coffeeShop} />
         ))}
-    </div>
-  );
-}
-
-function CoffeeShopView({ coffeeShop }: { coffeeShop: CoffeeShop }) {
-  return (
-    <div style={{ marginBottom: "20px" }}>
-      <div>{coffeeShop.name}</div>
-      <div>
-        Coordinates: {coffeeShop.x}, {coffeeShop.y}
-      </div>
     </div>
   );
 }
