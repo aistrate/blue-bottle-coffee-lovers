@@ -34,11 +34,11 @@ async function fetchCoffeeShopsWithRetry(
 
   retries = retries - 1;
 
-  if (
-    fetchResult.httpStatus === 200 ||
-    (!fetchResult.httpStatus && !fetchResult.timedOut) ||
-    retries <= 0
-  ) {
+  const isHttpError =
+    !!fetchResult.httpStatus && fetchResult.httpStatus !== 200;
+  const shouldRetry = retries >= 1 && (isHttpError || fetchResult.timedOut);
+
+  if (!shouldRetry) {
     return fetchResult;
   }
 
