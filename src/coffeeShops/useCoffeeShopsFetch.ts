@@ -5,6 +5,7 @@ import { CoffeeShop, Token } from "./models";
 
 const retryCount = 3;
 const retryInterval = 1000;
+const fetchTimeout = 2000;
 
 type CoffeeShopsFetchResult = { token?: string } & FetchResult<CoffeeShop[]>;
 
@@ -32,13 +33,13 @@ async function fetchCoffeeShopsWithRetry(
 
   if (
     fetchResult.httpStatus === 200 ||
-    !fetchResult.httpStatus ||
+    (!fetchResult.httpStatus && !fetchResult.timedOut) ||
     retries <= 0
   ) {
     return fetchResult;
   }
 
-  if (fetchResult.httpStatus !== 401) {
+  if (fetchResult.httpStatus !== 401 && !fetchResult.timedOut) {
     await delay(retryInterval);
   }
 
@@ -66,7 +67,9 @@ async function fetchCoffeeShops(
   }
 
   const coffeeShopsFetchResult = await fetchData<CoffeeShop[]>(
-    coffeeShopsUrl(token)
+    coffeeShopsUrl(token),
+    "GET",
+    fetchTimeout
   );
 
   return {

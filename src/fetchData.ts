@@ -2,19 +2,33 @@ export type FetchResult<Data> = {
   data?: Data;
   httpStatus?: number;
   error?: string;
+  timedOut?: boolean;
 };
 
 export default async function fetchData<Data>(
   requestUrl: string,
-  method = "GET"
+  method = "GET",
+  timeout = 0
 ): Promise<FetchResult<Data>> {
+  const abortController = new AbortController();
+
+  if (timeout) {
+    setTimeout(() => abortController.abort(), timeout);
+  }
+
   let response: Response;
 
   try {
-    response = await fetch(requestUrl, { method });
+    response = await fetch(requestUrl, {
+      method,
+      signal: abortController.signal,
+    });
   } catch (err) {
-    const message = (err as Error).message;
-    return { error: `Error: ${message}` };
+    const error = err as Error;
+    return {
+      error: `Error: ${error.message}`,
+      timedOut: error.name === "AbortError",
+    };
   }
 
   if (!response.ok) {
