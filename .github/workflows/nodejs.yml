@@ -26,3 +26,6 @@ jobs:
 
       - name: Run tests 
         run: yarn test --watchAll=false
+      
+      - name: Run linting
+        run: yarn run eslint src
