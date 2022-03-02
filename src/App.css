@@ -1,0 +1,7 @@
+.CoffeeShopsView__container {
+  margin: 20px 6vw 0 6vw;
+}
+
+.CoffeeShopsView__error {
+  color: red;
+}

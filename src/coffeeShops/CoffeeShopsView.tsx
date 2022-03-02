@@ -7,11 +7,11 @@ export default function CoffeeShopsView() {
   const coffeeShops = coffeeShopsFetch.data?.map(convertFromRaw);
 
   return (
-    <div style={{ margin: "20px 6vw 0 6vw" }}>
+    <div className="CoffeeShopsView__container">
       {coffeeShopsFetch.isLoading && <div>Loading...</div>}
 
       {coffeeShopsFetch.error && (
-        <div style={{ color: "red" }}>
+        <div className="CoffeeShopsView__error">
           {coffeeShopsFetch.httpStatus
             ? `${coffeeShopsFetch.error}. Please come back later.`
             : coffeeShopsFetch.error}
