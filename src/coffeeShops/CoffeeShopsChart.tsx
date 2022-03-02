@@ -27,6 +27,12 @@ export default function CoffeeShopsChart({
 
 function createOptions() {
   return {
+    aspectRatio: 2.2,
+    elements: {
+      point: {
+        radius: 6,
+      },
+    },
     plugins: {
       tooltip: {
         callbacks: {
@@ -39,8 +45,14 @@ function createOptions() {
       },
     },
     scales: {
+      x: {
+        min: -180,
+        max: 180,
+        position: "top" as "top",
+      },
       y: {
-        beginAtZero: true,
+        min: -90,
+        max: 90,
       },
     },
   };
@@ -50,13 +62,14 @@ function createData(coffeeShops: CoffeeShop[]) {
   return {
     datasets: [
       {
-        label: "Blue Bottle Coffee Shops",
+        label: "All Blue Bottle Coffee Shops",
         data: coffeeShops.map((coffeeShop) => ({
           name: coffeeShop.name,
           x: coffeeShop.y,
           y: coffeeShop.x,
         })),
-        backgroundColor: "rgba(255, 99, 132, 1)",
+        borderColor: "rgba(53, 162, 235, 1)",
+        backgroundColor: "rgba(53, 162, 235, 0.5)",
       },
     ],
   };
