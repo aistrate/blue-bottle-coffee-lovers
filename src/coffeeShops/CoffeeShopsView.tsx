@@ -1,8 +1,10 @@
 import CoffeeShopView from "./CoffeeShopView";
+import { convertFromRaw } from "./models";
 import useCoffeeShopsFetch from "./useCoffeeShopsFetch";
 
 export default function CoffeeShopsView() {
   const coffeeShopsFetch = useCoffeeShopsFetch();
+  const coffeeShops = coffeeShopsFetch.data?.map(convertFromRaw);
 
   return (
     <div style={{ marginLeft: "20px", marginTop: "20px" }}>
@@ -16,8 +18,8 @@ export default function CoffeeShopsView() {
         </div>
       )}
 
-      {coffeeShopsFetch.data &&
-        coffeeShopsFetch.data.map((coffeeShop) => (
+      {coffeeShops &&
+        coffeeShops.map((coffeeShop) => (
           <CoffeeShopView key={coffeeShop.id} coffeeShop={coffeeShop} />
         ))}
     </div>
