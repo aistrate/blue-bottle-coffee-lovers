@@ -7,6 +7,11 @@ const retryCount = 3;
 const retryInterval = 1000;
 const fetchTimeout = 2000;
 
+const httpStatusCode = {
+  ok: 200,
+  unauthorized: 401,
+} as const;
+
 type CoffeeShopsFetchResult = { token?: string } & FetchResult<CoffeeShop[]>;
 
 export default function useCoffeeShopsFetch() {
@@ -35,14 +40,17 @@ async function fetchCoffeeShopsWithRetry(
   retries = retries - 1;
 
   const isHttpError =
-    !!fetchResult.httpStatus && fetchResult.httpStatus !== 200;
+    !!fetchResult.httpStatus && fetchResult.httpStatus !== httpStatusCode.ok;
   const shouldRetry = retries >= 1 && (isHttpError || fetchResult.timedOut);
 
   if (!shouldRetry) {
     return fetchResult;
   }
 
-  if (fetchResult.httpStatus !== 401 && !fetchResult.timedOut) {
+  if (
+    fetchResult.httpStatus !== httpStatusCode.unauthorized &&
+    !fetchResult.timedOut
+  ) {
     await delay(retryInterval);
   }
 
@@ -76,7 +84,10 @@ async function fetchCoffeeShops(
   );
 
   return {
-    token: coffeeShopsFetchResult.httpStatus === 401 ? undefined : token,
+    token:
+      coffeeShopsFetchResult.httpStatus === httpStatusCode.unauthorized
+        ? undefined
+        : token,
     ...coffeeShopsFetchResult,
   };
 }
