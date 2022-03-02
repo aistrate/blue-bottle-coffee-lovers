@@ -51,11 +51,40 @@ function createOptions() {
         },
       },
     },
+    onClick: onClick,
   };
 }
 
 function tooltipTitle(tooltipItems: TooltipItem<"scatter">[]) {
   return tooltipItems.map((item) => (item.raw as CoffeeShop).name).join("\n");
+}
+
+function onClick(event: any) {
+  const chartX =
+    Math.round(
+      (((event.x - event.chart.chartArea.left) / event.chart.chartArea.width) *
+        360 -
+        180) *
+        10
+    ) / 10;
+
+  const chartY =
+    Math.round(
+      (90 -
+        ((event.y - event.chart.chartArea.top) / event.chart.chartArea.height) *
+          180) *
+        10
+    ) / 10;
+
+  if (-180 <= chartX && chartX <= 180 && -90 <= chartY && chartY <= 90) {
+    const data = [
+      {
+        name: "Current location",
+        x: chartX,
+        y: chartY,
+      },
+    ];
+  }
 }
 
 function createData(coffeeShops: CoffeeShop[]) {
