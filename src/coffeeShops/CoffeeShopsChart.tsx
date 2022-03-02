@@ -5,6 +5,7 @@ import {
   LineElement,
   PointElement,
   Tooltip,
+  TooltipItem,
 } from "chart.js";
 import { Scatter } from "react-chartjs-2";
 import { CoffeeShop } from "./models";
@@ -26,6 +27,17 @@ export default function CoffeeShopsChart({
 
 function createOptions() {
   return {
+    plugins: {
+      tooltip: {
+        callbacks: {
+          title: function (tooltipItems: TooltipItem<"scatter">[]) {
+            return tooltipItems
+              .map((item) => (item.raw as CoffeeShop).name)
+              .join("\n");
+          },
+        },
+      },
+    },
     scales: {
       y: {
         beginAtZero: true,
@@ -38,10 +50,11 @@ function createData(coffeeShops: CoffeeShop[]) {
   return {
     datasets: [
       {
-        label: "Coffee Shops",
+        label: "Blue Bottle Coffee Shops",
         data: coffeeShops.map((coffeeShop) => ({
-          x: coffeeShop.x,
-          y: coffeeShop.y,
+          name: coffeeShop.name,
+          x: coffeeShop.y,
+          y: coffeeShop.x,
         })),
         backgroundColor: "rgba(255, 99, 132, 1)",
       },
