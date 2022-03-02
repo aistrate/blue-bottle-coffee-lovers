@@ -13,11 +13,14 @@ export default function useCoffeeShopsFetch() {
   const [fetchResult, setFetchResult] = useState<CoffeeShopsFetchResult>({});
   const [isLoading, setIsLoading] = useState(true);
 
+  async function fetchAndSetState() {
+    const fetchResult = await fetchCoffeeShopsWithRetry(retryCount);
+    setFetchResult(fetchResult);
+    setIsLoading(false);
+  }
+
   useEffect(() => {
-    (async () => {
-      setFetchResult(await fetchCoffeeShopsWithRetry(retryCount));
-      setIsLoading(false);
-    })();
+    fetchAndSetState();
   }, []);
 
   return { ...fetchResult, isLoading };
