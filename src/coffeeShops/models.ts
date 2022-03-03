@@ -8,3 +8,19 @@ export type CoffeeShop = {
   x: number;
   y: number;
 };
+
+export type CoffeeShopRaw = {
+  id: number;
+  name: string;
+  x: string;
+  y: string;
+};
+
+export function convertFromRaw(coffeeShopRaw: CoffeeShopRaw): CoffeeShop {
+  return {
+    id: coffeeShopRaw.id,
+    name: coffeeShopRaw.name,
+    x: parseFloat(coffeeShopRaw.x),
+    y: parseFloat(coffeeShopRaw.y),
+  };
+}

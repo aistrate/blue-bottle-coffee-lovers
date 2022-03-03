@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { coffeeShopsUrl, tokenUrl } from "../api";
 import fetchData, { FetchResult } from "../fetchData";
-import { CoffeeShop, Token } from "./models";
+import { CoffeeShopRaw, Token } from "./models";
 
 const retryCount = 3;
 const retryInterval = 1000;
@@ -12,7 +12,7 @@ const httpStatusCode = {
   unauthorized: 401,
 } as const;
 
-type CoffeeShopsFetchResult = { token?: string } & FetchResult<CoffeeShop[]>;
+type CoffeeShopsFetchResult = { token?: string } & FetchResult<CoffeeShopRaw[]>;
 
 export default function useCoffeeShopsFetch() {
   const [fetchResult, setFetchResult] = useState<CoffeeShopsFetchResult>({});
@@ -77,7 +77,7 @@ async function fetchCoffeeShops(
     token = prevToken;
   }
 
-  const coffeeShopsFetchResult = await fetchData<CoffeeShop[]>(
+  const coffeeShopsFetchResult = await fetchData<CoffeeShopRaw[]>(
     coffeeShopsUrl(token),
     "GET",
     fetchTimeout
