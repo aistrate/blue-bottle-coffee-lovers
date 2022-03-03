@@ -163,7 +163,7 @@ function locationDataset({ x, y }: Point): Dataset {
   return {
     label: "Current location",
     data: [{ x, y }],
-    borderColor: "rgba(162, 235, 53, 1)",
-    backgroundColor: "rgba(162, 235, 53, 0.5)",
+    borderColor: "rgba(162, 235, 0, 1)",
+    backgroundColor: "rgba(162, 235, 0, 0.5)",
   };
 }
