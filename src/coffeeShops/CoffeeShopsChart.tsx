@@ -41,6 +41,7 @@ function createOptions() {
     elements: {
       point: {
         radius: 15,
+        hoverRadius: 20,
       },
     },
     plugins: {
