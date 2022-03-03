@@ -7,8 +7,8 @@ export default function CoffeeShopsView() {
   const coffeeShops = coffeeShopsFetch.data?.map(convertFromRaw);
 
   return (
-    <div className="CoffeeShopsView__container">
-      {coffeeShopsFetch.isLoading && <div>Loading...</div>}
+    <div className="coffee-shops-view__container">
+      {coffeeShopsFetch.isLoading && <div className="spinner"></div>}
 
       {coffeeShopsFetch.error && (
         <div className="error">
