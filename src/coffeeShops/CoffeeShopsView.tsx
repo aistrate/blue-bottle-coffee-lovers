@@ -11,7 +11,7 @@ export default function CoffeeShopsView() {
       {coffeeShopsFetch.isLoading && <div>Loading...</div>}
 
       {coffeeShopsFetch.error && (
-        <div className="CoffeeShopsView__error">
+        <div className="error">
           {coffeeShopsFetch.httpStatus
             ? `${coffeeShopsFetch.error}. Please come back later.`
             : coffeeShopsFetch.error}
