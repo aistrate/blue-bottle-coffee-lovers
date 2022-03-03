@@ -1,6 +1,5 @@
 import {
   Chart,
-  Chart as ChartJS,
   ChartArea,
   ChartEvent,
   Legend,
@@ -14,7 +13,7 @@ import { useRef } from "react";
 import { Scatter } from "react-chartjs-2";
 import { CoffeeShop } from "./models";
 
-ChartJS.register(LinearScale, PointElement, LineElement, Tooltip, Legend);
+Chart.register(LinearScale, PointElement, LineElement, Tooltip, Legend);
 
 type CoffeeShopsChartProps = {
   coffeeShops: CoffeeShop[];
