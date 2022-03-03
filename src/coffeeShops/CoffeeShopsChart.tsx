@@ -66,7 +66,7 @@ export default function CoffeeShopsChart({
 
 type Point = { x: number; y: number };
 
-type DataPoint = { title?: string } & Point;
+type DataPoint = CoffeeShop | Point;
 
 type Dataset = {
   label: string;
@@ -110,7 +110,7 @@ function createOptions(onClick: (event: ChartEvent) => void) {
 }
 
 function tooltipTitle(tooltipItems: TooltipItem<"scatter">[]) {
-  return tooltipItems.map((item) => (item.raw as DataPoint).title).join("\n");
+  return tooltipItems.map((item) => (item.raw as CoffeeShop).name).join("\n");
 }
 
 function filterTooltips(tooltipItem: TooltipItem<"scatter">) {
@@ -135,11 +135,7 @@ function isWithinBounds({ x, y }: Point) {
 function allShopsDataset(coffeeShops: CoffeeShop[]): Dataset {
   return {
     label: "All coffee shops",
-    data: coffeeShops.map((coffeeShop) => ({
-      title: coffeeShop.name,
-      x: coffeeShop.x,
-      y: coffeeShop.y,
-    })),
+    data: coffeeShops,
     borderColor: "rgba(53, 162, 235, 1)",
     backgroundColor: "rgba(53, 162, 235, 0.5)",
   };
@@ -148,11 +144,7 @@ function allShopsDataset(coffeeShops: CoffeeShop[]): Dataset {
 function closestShopsDataset(coffeeShops: CoffeeShop[]): Dataset {
   return {
     label: "Closest coffee shops",
-    data: coffeeShops.map((coffeeShop) => ({
-      title: coffeeShop.name,
-      x: coffeeShop.x,
-      y: coffeeShop.y,
-    })),
+    data: coffeeShops,
     borderColor: "rgba(235, 53, 162, 1)",
     backgroundColor: "rgba(235, 53, 162, 0.5)",
   };
@@ -161,11 +153,7 @@ function closestShopsDataset(coffeeShops: CoffeeShop[]): Dataset {
 function otherShopsDataset(coffeeShops: CoffeeShop[]): Dataset {
   return {
     label: "Other coffee shops",
-    data: coffeeShops.map((coffeeShop) => ({
-      title: coffeeShop.name,
-      x: coffeeShop.x,
-      y: coffeeShop.y,
-    })),
+    data: coffeeShops,
     borderColor: "rgba(53, 162, 235, 0.25)",
     backgroundColor: "rgba(53, 162, 235, 0.12)",
   };
@@ -174,12 +162,7 @@ function otherShopsDataset(coffeeShops: CoffeeShop[]): Dataset {
 function locationDataset({ x, y }: Point): Dataset {
   return {
     label: "Current location",
-    data: [
-      {
-        x,
-        y,
-      },
-    ],
+    data: [{ x, y }],
     borderColor: "rgba(162, 235, 53, 1)",
     backgroundColor: "rgba(162, 235, 53, 0.5)",
   };
