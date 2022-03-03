@@ -164,8 +164,8 @@ function otherShopsDataset(coffeeShops: CoffeeShop[]): Dataset {
       x: coffeeShop.x,
       y: coffeeShop.y,
     })),
-    borderColor: "rgba(53, 162, 235, 1)",
-    backgroundColor: "rgba(53, 162, 235, 0.5)",
+    borderColor: "rgba(53, 162, 235, 0.25)",
+    backgroundColor: "rgba(53, 162, 235, 0.12)",
   };
 }
 
@@ -179,7 +179,7 @@ function locationDataset({ x, y }: Point): Dataset {
         y,
       },
     ],
-    borderColor: "rgba(53, 235, 162, 1)",
-    backgroundColor: "rgba(53, 235, 162, 0.5)",
+    borderColor: "rgba(162, 235, 53, 1)",
+    backgroundColor: "rgba(162, 235, 53, 0.5)",
   };
 }
