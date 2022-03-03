@@ -40,7 +40,7 @@ function createOptions() {
     },
     elements: {
       point: {
-        radius: 6,
+        radius: 15,
       },
     },
     plugins: {
