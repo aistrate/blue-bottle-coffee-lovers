@@ -20,7 +20,8 @@ export function convertFromRaw(coffeeShopRaw: CoffeeShopRaw): CoffeeShop {
   return {
     id: coffeeShopRaw.id,
     name: coffeeShopRaw.name,
-    x: parseFloat(coffeeShopRaw.x),
-    y: parseFloat(coffeeShopRaw.y),
+    // switch x and y
+    x: parseFloat(coffeeShopRaw.y),
+    y: parseFloat(coffeeShopRaw.x),
   };
 }

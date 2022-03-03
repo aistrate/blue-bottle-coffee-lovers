@@ -8,9 +8,10 @@ import {
   Tooltip,
   TooltipItem,
 } from "chart.js";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Scatter } from "react-chartjs-2";
 import { CoffeeShop } from "./models";
+import { sortByDistance } from "./sorting";
 
 Chart.register(LinearScale, PointElement, LineElement, Tooltip, Legend);
 
@@ -24,12 +25,31 @@ export default function CoffeeShopsChart({
   const chartRef = useRef<Chart<"scatter">>(null!);
   const [location, setLocation] = useState<Point | null>(null);
 
+  const [closestShops, setClosestShops] = useState<CoffeeShop[]>([]);
+  const [otherShops, setOtherShops] = useState<CoffeeShop[]>([]);
+
+  useEffect(() => {
+    const closest = location
+      ? sortByDistance(location, coffeeShops).slice(undefined, 3)
+      : [];
+    setClosestShops(closest);
+
+    const closestIds = closest.map((coffeeShop) => coffeeShop.id);
+    const other = coffeeShops.filter(
+      (coffeeShop) => !closestIds.includes(coffeeShop.id)
+    );
+    setOtherShops(other);
+  }, [location, coffeeShops]);
+
   const data = {
-    datasets: [allShopsDataset(coffeeShops)],
+    datasets: location
+      ? [
+          locationDataset(location),
+          closestShopsDataset(closestShops),
+          otherShopsDataset(otherShops),
+        ]
+      : [allShopsDataset(coffeeShops)],
   };
-  if (location) {
-    data.datasets.push(locationDataset(location));
-  }
 
   const options = createOptions(onClick);
 
@@ -86,7 +106,7 @@ function createOptions(onClick: (event: ChartEvent) => void) {
     },
     onClick: onClick,
     animation: {
-      duration: 300,
+      duration: 0,
     },
   };
 }
@@ -115,8 +135,34 @@ function allShopsDataset(coffeeShops: CoffeeShop[]): Dataset {
     label: "All coffee shops",
     data: coffeeShops.map((coffeeShop) => ({
       title: coffeeShop.name,
-      x: coffeeShop.y,
-      y: coffeeShop.x,
+      x: coffeeShop.x,
+      y: coffeeShop.y,
+    })),
+    borderColor: "rgba(53, 162, 235, 1)",
+    backgroundColor: "rgba(53, 162, 235, 0.5)",
+  };
+}
+
+function closestShopsDataset(coffeeShops: CoffeeShop[]): Dataset {
+  return {
+    label: "Closest coffee shops",
+    data: coffeeShops.map((coffeeShop) => ({
+      title: coffeeShop.name,
+      x: coffeeShop.x,
+      y: coffeeShop.y,
+    })),
+    borderColor: "rgba(235, 53, 162, 1)",
+    backgroundColor: "rgba(235, 53, 162, 0.5)",
+  };
+}
+
+function otherShopsDataset(coffeeShops: CoffeeShop[]): Dataset {
+  return {
+    label: "Other coffee shops",
+    data: coffeeShops.map((coffeeShop) => ({
+      title: coffeeShop.name,
+      x: coffeeShop.x,
+      y: coffeeShop.y,
     })),
     borderColor: "rgba(53, 162, 235, 1)",
     backgroundColor: "rgba(53, 162, 235, 0.5)",
