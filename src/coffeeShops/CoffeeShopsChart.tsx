@@ -1,5 +1,8 @@
 import {
+  Chart,
   Chart as ChartJS,
+  ChartArea,
+  ChartEvent,
   Legend,
   LinearScale,
   LineElement,
@@ -7,6 +10,7 @@ import {
   Tooltip,
   TooltipItem,
 } from "chart.js";
+import { useRef } from "react";
 import { Scatter } from "react-chartjs-2";
 import { CoffeeShop } from "./models";
 
@@ -19,13 +23,32 @@ type CoffeeShopsChartProps = {
 export default function CoffeeShopsChart({
   coffeeShops,
 }: CoffeeShopsChartProps) {
-  const options = createOptions();
+  const options = createOptions(onClick);
   const data = createData(coffeeShops);
+  const chartRef = useRef<Chart<"scatter">>(null!);
 
-  return <Scatter options={options} data={data} />;
+  function onClick(event: ChartEvent) {
+    const { x, y } = toChartCoordinates(
+      event.x || 0,
+      event.y || 0,
+      chartRef.current.chartArea
+    );
+
+    if (isPointWithinBounds(x, y)) {
+      const data = [
+        {
+          name: "Current location",
+          x,
+          y,
+        },
+      ];
+    }
+  }
+
+  return <Scatter options={options} data={data} ref={chartRef} />;
 }
 
-function createOptions() {
+function createOptions(onClick: (event: ChartEvent) => void) {
   return {
     scales: {
       x: {
@@ -59,32 +82,26 @@ function tooltipTitle(tooltipItems: TooltipItem<"scatter">[]) {
   return tooltipItems.map((item) => (item.raw as CoffeeShop).name).join("\n");
 }
 
-function onClick(event: any) {
-  const chartX =
+function toChartCoordinates(
+  canvasX: number,
+  canvasY: number,
+  chartArea: ChartArea
+) {
+  const x =
     Math.round(
-      (((event.x - event.chart.chartArea.left) / event.chart.chartArea.width) *
-        360 -
-        180) *
-        10
+      (((canvasX - chartArea.left) / chartArea.width) * 360 - 180) * 10
     ) / 10;
 
-  const chartY =
+  const y =
     Math.round(
-      (90 -
-        ((event.y - event.chart.chartArea.top) / event.chart.chartArea.height) *
-          180) *
-        10
+      (90 - ((canvasY - chartArea.top) / chartArea.height) * 180) * 10
     ) / 10;
 
-  if (-180 <= chartX && chartX <= 180 && -90 <= chartY && chartY <= 90) {
-    const data = [
-      {
-        name: "Current location",
-        x: chartX,
-        y: chartY,
-      },
-    ];
-  }
+  return { x, y };
+}
+
+function isPointWithinBounds(x: number, y: number) {
+  return -180 <= x && x <= 180 && -90 <= y && y <= 90;
 }
 
 function createData(coffeeShops: CoffeeShop[]) {
