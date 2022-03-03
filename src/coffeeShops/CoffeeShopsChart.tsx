@@ -84,9 +84,15 @@ function createOptions(onClick: (event: ChartEvent) => void) {
         callbacks: {
           title: tooltipTitle,
         },
+        animation: {
+          duration: 300,
+        },
       },
     },
     onClick: onClick,
+    animation: {
+      duration: 300,
+    },
   };
 }
 
