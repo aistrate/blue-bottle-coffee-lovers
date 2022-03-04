@@ -1,6 +1,5 @@
 import {
   Chart,
-  ChartArea,
   ChartEvent,
   Legend,
   LinearScale,
@@ -35,11 +34,7 @@ export default function CoffeeShopsChart({
   const options = createOptions(onClick);
 
   function onClick(event: ChartEvent) {
-    const point = toChartCoordinates(
-      event.x || 0,
-      event.y || 0,
-      chartRef.current.chartArea
-    );
+    const point = toDataCoordinates(event.x!, event.y!, chartRef.current);
 
     if (isWithinBounds(point)) {
       setLocation(point);
@@ -100,22 +95,15 @@ function tooltipTitle(tooltipItems: TooltipItem<"scatter">[]) {
   return tooltipItems.map((item) => (item.raw as DataPoint).title).join("\n");
 }
 
-function toChartCoordinates(
-  canvasX: number,
-  canvasY: number,
-  chartArea: ChartArea
-) {
-  const x =
-    Math.round(
-      (((canvasX - chartArea.left) / chartArea.width) * 360 - 180) * 10
-    ) / 10;
+function toDataCoordinates(canvasX: number, canvasY: number, chart: Chart) {
+  return {
+    x: round(chart.scales.x.getValueForPixel(canvasX)!),
+    y: round(chart.scales.y.getValueForPixel(canvasY)!),
+  };
+}
 
-  const y =
-    Math.round(
-      (90 - ((canvasY - chartArea.top) / chartArea.height) * 180) * 10
-    ) / 10;
-
-  return { x, y };
+function round(a: number) {
+  return Math.round(a * 10) / 10;
 }
 
 function isWithinBounds({ x, y }: Point) {
