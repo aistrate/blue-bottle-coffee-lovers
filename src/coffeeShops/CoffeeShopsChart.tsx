@@ -66,7 +66,7 @@ export default function CoffeeShopsChart({
 
 type Point = { x: number; y: number };
 
-type DataPoint = { title: string } & Point;
+type DataPoint = { title?: string } & Point;
 
 type Dataset = {
   label: string;
@@ -99,9 +99,7 @@ function createOptions(onClick: (event: ChartEvent) => void) {
         callbacks: {
           title: tooltipTitle,
         },
-        animation: {
-          duration: 300,
-        },
+        filter: filterTooltips,
       },
     },
     onClick: onClick,
@@ -113,6 +111,10 @@ function createOptions(onClick: (event: ChartEvent) => void) {
 
 function tooltipTitle(tooltipItems: TooltipItem<"scatter">[]) {
   return tooltipItems.map((item) => (item.raw as DataPoint).title).join("\n");
+}
+
+function filterTooltips(tooltipItem: TooltipItem<"scatter">) {
+  return tooltipItem.dataset.label !== "Current location";
 }
 
 function toDataCoordinates(canvasX: number, canvasY: number, chart: Chart) {
@@ -174,7 +176,6 @@ function locationDataset({ x, y }: Point): Dataset {
     label: "Current location",
     data: [
       {
-        title: "Current location",
         x,
         y,
       },
